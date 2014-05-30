@@ -49,6 +49,9 @@ robotfarm.Garage = function(gameObj, playerObj) {
 
 			//update player money
 			playerObj.money += gameObj.crops[land.crop].revenue;
+			playerObj.robotArmor += gameObj.crops[land.crop].armor;
+			playerObj.robotAttack1 += gameObj.crops[land.crop].attack1;
+			playerObj.robotAttack2 += gameObj.crops[land.crop].attack2;
 			gameObj.updateMoney();
 		}
 	});

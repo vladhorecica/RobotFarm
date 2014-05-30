@@ -1,6 +1,15 @@
-var EASY = 10;
-var MEDIUM = 20;
-var HARD = 30;
+var EASY = 0;
+var MEDIUM = 10;
+var HARD = 20;
+
+//player object
+var playerObj = {
+	money: 300,
+	currentCrop: 0,
+	robotAttack1: 10,
+	robotAttack2: 100,
+	robotArmor: 100
+}
 
 var gameObj = {
 	width: 320,
@@ -27,7 +36,10 @@ function setDifficulty(level) {
 			revenue: 20 + level,
 			time_to_ripe: 5 + level, //secods
 			time_to_death: 30 - level,
-			image: 'tomato.png'
+			image: 'tomato.png',
+			attack1: 0,
+			attack2: 0,
+			armor: 100
 		},
 		{
 			name: 'Right Arm',
@@ -35,7 +47,10 @@ function setDifficulty(level) {
 			revenue: 30 + level,
 			time_to_ripe: 10 + level,
 			time_to_death: 60 - level,
-			image: 'artichoke.png'
+			image: 'artichoke.png',
+			attack1: 15,
+			attack2: 16,
+			armor: 12
 		},
 		{
 			name: 'Left Arm',
@@ -43,7 +58,10 @@ function setDifficulty(level) {
 			revenue: 30 + level,
 			time_to_ripe: 10 + level,
 			time_to_death: 60 - level,
-			image: 'lettuce.png'
+			image: 'lettuce.png',
+			attack1: 17,
+			attack2: 19,
+			armor: 12
 		},
 		{
 			name: 'Head',
@@ -51,7 +69,10 @@ function setDifficulty(level) {
 			revenue: 40 + level,
 			time_to_ripe: 15 + level,
 			time_to_death: 70 - level,
-			image: 'eggplant.png'
+			image: 'eggplant.png',
+			attack1: 0,
+			attack2: 0,
+			armor: 30
 		},
 		{
 			name: 'Right Leg',
@@ -59,7 +80,10 @@ function setDifficulty(level) {
 			revenue: 50 + level,
 			time_to_ripe: 20 + level,
 			time_to_death: 80 - level,
-			image: 'peppers.png'
+			image: 'peppers.png',
+			attack1: 18,
+			attack2: 20,
+			armor: 20
 		},
 		{
 			name: 'Left Leg',
@@ -67,7 +91,10 @@ function setDifficulty(level) {
 			revenue: 50 + level,
 			time_to_ripe: 20 + level,
 			time_to_death: 80 - level,
-			image: 'extra.png'
+			image: 'extra_leg.png',
+			attack1: 16,
+			attack2: 23,
+			armor: 20
 		}
 	];
 }

@@ -12,95 +12,56 @@ goog.require('robotfarm.Garage');
 
 // entrypoint
 robotfarm.start = function(){
-
-	//game object
-//	var gameObj = {
-//		width: 320,
-//		height: 480,
-//		tile_size: 64,
-//		num_tiles_x: 5,
-//		num_tiles_y: 6,
-//		landLayer_w: 64*5,
-//		landLayer_h: 64*6,
-//		controlsLayer_w: 64*5,
-//		controlsLayer_h: 64*1.5,
-//		costPlowing: 5,
-//
-//		//shop
-//		shop_margin_x: 50,
-//		shop_margin_y: 20
-//	}
-
-
-	//player object
-	var playerObj = {
-		money: 300,
-		currentCrop: 0
-	}
-
-//	//crops
-//	gameObj.crops = [
-//		{
-//			name: 'tomato',
-//			cost: 10,
-//			revenue: 18,
-//			time_to_ripe: 5, //secods
-//			time_to_death: 30, //second from when it's ripe
-//			image: 'tomato.png'
-//		},
-//		{
-//			name: 'artichoke',
-//			cost: 20,
-//			revenue: 38,
-//			time_to_ripe: 10,
-//			time_to_death: 60,
-//			image: 'artichoke.png'
-//		},
-//		{
-//			name: 'lettuce',
-//			cost: 15,
-//			revenue: 26,
-//			time_to_ripe: 10,
-//			time_to_death: 60,
-//			image: 'lettuce.png'
-//		},
-//		{
-//			name: 'eggplant',
-//			cost: 30,
-//			revenue: 78,
-//			time_to_ripe: 10,
-//			time_to_death: 120,
-//			image: 'eggplant.png'
-//		},
-//		{
-//			name: 'peppers',
-//			cost: 40,
-//			revenue: 82,
-//			time_to_ripe: 10,
-//			time_to_death: 180,
-//			image: 'peppers.png'
-//		},
-//		{
-//			name: 'extra',
-//			cost: 40,
-//			revenue: 82,
-//			time_to_ripe: 10,
-//			time_to_death: 180,
-//			image: 'hay.png'
-//		}
-//	];
-	setDifficulty(10);
+	setDifficulty(EASY);
 	var director = new lime.Director(document.body,gameObj.width,gameObj.height);
 	director.makeMobileWebAppCapable();
 	director.setDisplayFPS(false);
 
+	// First layer ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	var difScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
+	var difLayer = new lime.Layer().setAnchorPoint(0, 0);
+
+	//controls area
+	var difArea = new lime.Sprite().setAnchorPoint(0,0).setPosition(0,0)
+		.setSize(gameObj.width, gameObj.height).setFill('#0D0D0D');
+	difLayer.appendChild(difArea);
+	difScene.appendChild(difLayer);
+
+	director.replaceScene(difScene);
+
+	//difficulty label
+	var difLabel = new lime.Label().setText('PICK DIFFICULTY').setFontColor('white')
+		.setFontSize(20)
+		.setPosition(gameObj.width/2, gameObj.height - gameObj.landLayer_h);
+	difLayer.appendChild(difLabel);
+
+	//easy button
+	var easyButton = new lime.GlossyButton().setColor('#EA6100').setText('EASY')
+		.setPosition(gameObj.landLayer_w/2, gameObj.landLayer_h/2 )
+		.setSize(130, 40);
+	difLayer.appendChild(easyButton);
+
+	//medium button
+	var mediumButton = new lime.GlossyButton().setColor('#EA6100').setText('MEDIUM')
+		.setPosition(gameObj.landLayer_w/2, gameObj.landLayer_h/2 + 70)
+		.setSize(130, 40);
+	difLayer.appendChild(mediumButton);
+
+	//hard button
+	var hardButton = new lime.GlossyButton().setColor('#EA6100').setText('HARD')
+		.setPosition(gameObj.landLayer_w/2, gameObj.landLayer_h/2 + 140)
+		.setSize(130, 40);
+	difLayer.appendChild(hardButton);
+
+	// END FIRST LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	// MAIN LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var gameScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
 	var landLayer = new lime.Layer().setAnchorPoint(0, 0);
 	var controlsLayer = new lime.Layer().setAnchorPoint(0, 0);
 
 	gameScene.appendChild(landLayer);
 	gameScene.appendChild(controlsLayer);
-
 
 	//controls area
 	var controlArea = new lime.Sprite().setAnchorPoint(0,0)
@@ -126,21 +87,58 @@ robotfarm.start = function(){
 		.setPosition(60, gameObj.height-gameObj.controlsLayer_h/2);
 	controlsLayer.appendChild(moneyLabel);
 
-	//updating money indicator
+	//updating player stats
 	gameObj.updateMoney = function() {
-		moneyLabel.setText('$'+playerObj.money);
+		moneyLabel.setText('Cash $'+playerObj.money);
+		attackLabel.setText('ATTACK: '+ playerObj.robotAttack1 + '-' + playerObj.robotAttack2);
+		armorLabel.setText('ARMOR: '+ playerObj.robotArmor);
 	};
 
 	//create land elements
 	for(var i=0; i<gameObj.num_tiles_x; i++) {
 		for(var j=0; j<gameObj.num_tiles_y; j++) {
-			var landElement = new robotfarm.Garage(gameObj, playerObj).setPosition(i*gameObj.tile_size, j*gameObj.tile_size);
+			var landElement = new robotfarm.Garage(gameObj, playerObj)
+				.setPosition(i*gameObj.tile_size, j*gameObj.tile_size);
 			landLayer.appendChild(landElement);
 		}
 	}
 
-	director.replaceScene(gameScene);
+//	director.replaceScene(gameScene);
+	// END MAIN LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+	// INVENTORY LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// inventory
+	var invScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
+	var invLayer = new lime.Layer().setAnchorPoint(0, 0);
+
+	var invBackground = new lime.Sprite().setAnchorPoint(0,0).setPosition(0,0)
+		.setSize(gameObj.width, gameObj.height).setFill('#0D0D0D');
+	invLayer.appendChild(invBackground);
+	invScene.appendChild(invLayer);
+
+	var item = new lime.Sprite().setAnchorPoint(0,0).setPosition(0, 0)
+		.setSize(gameObj.landLayer_w, gameObj.landLayer_h)
+		.setFill('images/robot_inventory.png');
+	invLayer.appendChild(item);
+
+	//close button
+	var invCloseButton = new lime.GlossyButton().setColor('#133242').setText('Back')
+		.setPosition(gameObj.controlsLayer_w-50, gameObj.height-gameObj.controlsLayer_h/2)
+		.setSize(80, 40);
+	invLayer.appendChild(invCloseButton);
+
+	// robot stats
+	var attackLabel = new lime.Label().setText('ATTACK: '+ playerObj.robotAttack1 + '-' + playerObj.robotAttack2)
+		.setFontColor('white')
+		.setPosition(60, gameObj.height-gameObj.controlsLayer_h/2);
+	invLayer.appendChild(attackLabel);
+	var armorLabel = new lime.Label().setText('ARMOR: '+ playerObj.robotArmor)
+		.setFontColor('white')
+		.setPosition(60, gameObj.height-gameObj.controlsLayer_h/2 + 15);
+	invLayer.appendChild(armorLabel);
+	// END INVENTORY LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	// SHOP LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	//shop
 	var shopScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
 	var shopLayer = new lime.Layer().setAnchorPoint(0, 0);
@@ -166,13 +164,15 @@ robotfarm.start = function(){
 	shopLayer.appendChild(closeButton);
 	nextShopLayer.appendChild(closeButton);
 
-
 	//next button
 	var nextButton = new lime.GlossyButton().setColor('#133242').setText('>')
 		.setPosition(gameObj.width - 40, gameObj.height-25)
 		.setSize(20, 20);
 	shopLayer.appendChild(nextButton);
 
+	// END SHOP LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	// EVENTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	//launch shop event
 	goog.events.listen(shopButton,['mousedown', 'touchstart'], function(e) {
 		director.replaceScene(shopScene);
@@ -188,6 +188,40 @@ robotfarm.start = function(){
 		director.replaceScene(gameScene);
 	});
 
+	//close inventory event
+	goog.events.listen(invCloseButton,['mousedown', 'touchstart'], function(e) {
+		director.replaceScene(gameScene);
+	});
+
+	//launch inventory event
+	goog.events.listen(inventoryButton,['mousedown', 'touchstart'], function(e) {
+		director.replaceScene(invScene);
+	});
+
+	//easy event
+	goog.events.listen(easyButton,['mousedown', 'touchstart'], function(e) {
+		setDifficulty(EASY);
+		setShopItems(shopLayer, gameScene, director);
+		director.replaceScene(gameScene);
+	});
+
+	//medium event
+	goog.events.listen(mediumButton,['mousedown', 'touchstart'], function(e) {
+		setDifficulty(MEDIUM);
+		setShopItems(shopLayer, gameScene, director);
+		director.replaceScene(gameScene);
+	});
+
+	//hard event
+	goog.events.listen(hardButton,['mousedown', 'touchstart'], function(e) {
+		setDifficulty(HARD);
+		setShopItems(shopLayer, gameScene, director);
+		director.replaceScene(gameScene);
+	});
+	// END EVENTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+
+function setShopItems(shopLayer, gameScene, director) {
 	//shop items
 	for(var i=0; i<gameObj.crops.length; i++) {
 		var item = new lime.Sprite().setAnchorPoint(0,0).setPosition(gameObj.shop_margin_x, gameObj.shop_margin_y + (gameObj.shop_margin_y + gameObj.tile_size)*i)
@@ -212,9 +246,6 @@ robotfarm.start = function(){
 			});
 		})(item, i);
 	}
-
 }
-
-
 //this is required for outside access after code is compiled in ADVANCED_COMPILATIONS mode
 //goog.exportSymbol('robotfarm.start', robotfarm.start);
