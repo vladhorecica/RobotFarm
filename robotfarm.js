@@ -15,7 +15,7 @@ robotfarm.start = function(){
 	setDifficulty(EASY);
 	var director = new lime.Director(document.body,gameObj.width,gameObj.height);
 	director.makeMobileWebAppCapable();
-	director.setDisplayFPS(false);
+	director.setDisplayFPS(true);
 
 	// First layer ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var difScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
@@ -225,16 +225,16 @@ function setShopItems(shopLayer, gameScene, director) {
 	//shop items
 	for(var i=0; i<gameObj.crops.length; i++) {
 		var item = new lime.Sprite().setAnchorPoint(0,0).setPosition(gameObj.shop_margin_x, gameObj.shop_margin_y + (gameObj.shop_margin_y + gameObj.tile_size)*i)
-			.setFill('images/'+gameObj.crops[i].image).setSize(gameObj.tile_size, gameObj.tile_size);
+			.setFill('images/'+gameObj.crops[i].getImage()).setSize(gameObj.tile_size, gameObj.tile_size);
 		shopLayer.appendChild(item);
 
-		var label = new lime.Label().setText(gameObj.crops[i].name+' ('+gameObj.crops[i].time_to_ripe+' days)').setFontColor('#E8FC08')
+		var label = new lime.Label().setText(gameObj.crops[i].getName()+' ('+gameObj.crops[i].getTimeRipe()+' days)').setFontColor('#E8FC08')
 			.setPosition(gameObj.shop_margin_x+150, gameObj.shop_margin_y*1.5 + (gameObj.shop_margin_y + gameObj.tile_size)*i);
 		shopLayer.appendChild(label);
-		var label = new lime.Label().setText('cost: $'+gameObj.crops[i].cost).setFontColor('#E8FC08')
+		var label = new lime.Label().setText('cost: $'+gameObj.crops[i].getCost()).setFontColor('#E8FC08')
 			.setPosition(gameObj.shop_margin_x+150, gameObj.shop_margin_y*2.5 + (gameObj.shop_margin_y + gameObj.tile_size)*i);
 		shopLayer.appendChild(label);
-		var label = new lime.Label().setText('revenue: $'+gameObj.crops[i].revenue).setFontColor('#E8FC08')
+		var label = new lime.Label().setText('revenue: $'+gameObj.crops[i].getRevenue()).setFontColor('#E8FC08')
 			.setPosition(gameObj.shop_margin_x+150, gameObj.shop_margin_y*3.4 + (gameObj.shop_margin_y + gameObj.tile_size)*i);
 		shopLayer.appendChild(label);
 

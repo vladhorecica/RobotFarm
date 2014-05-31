@@ -1,10 +1,13 @@
-function GameItem(name, cost, revenue, time_to_ripe, time_to_death, image) {
-	var name = name;
-	var cost = cost;
-	var revenue = revenue;
-	var time_to_ripe = time_to_ripe;
-	var time_to_death = time_to_death;
-	var image = image;
+function GameItem(data, level) {
+	var name = data[0];
+	var cost = data[1] + level;
+	var revenue = data[2] + level;
+	var time_to_ripe = data[3] + level;
+	var time_to_death = data[4] - level;
+	var image = data[0] + '.png';
+	var attack1 = data[5];
+	var attack2 = data[6];
+	var armor = data[7];
 
 	this.setName = function(value) {
 		name = value;
@@ -24,6 +27,15 @@ function GameItem(name, cost, revenue, time_to_ripe, time_to_death, image) {
 	this.setImage = function(value) {
 		image = value;
 	}
+	this.setAttack1= function(value) {
+		attack1 = value;
+	}
+	this.setAttack2 = function(value) {
+		attack2 = value;
+	}
+	this.setArmor = function(value) {
+		armor = value;
+	}
 	this.getName = function() {
 		return name;
 	}
@@ -41,5 +53,14 @@ function GameItem(name, cost, revenue, time_to_ripe, time_to_death, image) {
 	}
 	this.getImage = function() {
 		return image;
+	}
+	this.getAttack1 = function() {
+		return attack1;
+	}
+	this.getAttack2 = function() {
+		return attack2;
+	}
+	this.getArmor = function() {
+		return armor;
 	}
 }

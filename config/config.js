@@ -29,72 +29,8 @@ var gameObj = {
 }
 
 function setDifficulty(level) {
-	gameObj.crops = [
-		{
-			name: 'Chest',
-			cost: 10 + level,
-			revenue: 20 + level,
-			time_to_ripe: 5 + level, //secods
-			time_to_death: 30 - level,
-			image: 'tomato.png',
-			attack1: 0,
-			attack2: 0,
-			armor: 100
-		},
-		{
-			name: 'Right Arm',
-			cost: 20 + level,
-			revenue: 30 + level,
-			time_to_ripe: 10 + level,
-			time_to_death: 60 - level,
-			image: 'artichoke.png',
-			attack1: 15,
-			attack2: 16,
-			armor: 12
-		},
-		{
-			name: 'Left Arm',
-			cost: 20 + level,
-			revenue: 30 + level,
-			time_to_ripe: 10 + level,
-			time_to_death: 60 - level,
-			image: 'lettuce.png',
-			attack1: 17,
-			attack2: 19,
-			armor: 12
-		},
-		{
-			name: 'Head',
-			cost: 30 + level,
-			revenue: 40 + level,
-			time_to_ripe: 15 + level,
-			time_to_death: 70 - level,
-			image: 'eggplant.png',
-			attack1: 0,
-			attack2: 0,
-			armor: 30
-		},
-		{
-			name: 'Right Leg',
-			cost: 40 + level,
-			revenue: 50 + level,
-			time_to_ripe: 20 + level,
-			time_to_death: 80 - level,
-			image: 'peppers.png',
-			attack1: 18,
-			attack2: 20,
-			armor: 20
-		},
-		{
-			name: 'Left Leg',
-			cost: 40 + level,
-			revenue: 50 + level,
-			time_to_ripe: 20 + level,
-			time_to_death: 80 - level,
-			image: 'extra_leg.png',
-			attack1: 16,
-			attack2: 23,
-			armor: 20
-		}
-	];
+	gameObj.crops = [];
+	for(var i=0; i < settings.length; i++) {
+		gameObj.crops.push(new GameItem(settings[i], level));
+	}
 }

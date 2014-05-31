@@ -28,18 +28,18 @@ robotfarm.Garage = function(gameObj, playerObj) {
 			playerObj.money -= gameObj.costPlowing;
 			gameObj.updateMoney();
 		}
-		else if(land.state == land.PLOWED && playerObj.money >= gameObj.crops[playerObj.currentCrop].cost) {
+		else if(land.state == land.PLOWED && playerObj.money >= gameObj.crops[playerObj.currentCrop].getCost()) {
 			//plant
 			land.setFill('images/growing.png');
 			land.state = land.GROWING;
 
 			//store crop and left time for it to be ready and to die
 			land.crop = playerObj.currentCrop;
-			land.ripeTime = gameObj.crops[playerObj.currentCrop].time_to_ripe * 1000;
-			land.deathTime = gameObj.crops[playerObj.currentCrop].time_to_death * 1000;
+			land.ripeTime = gameObj.crops[playerObj.currentCrop].getTimeRipe() * 1000;
+			land.deathTime = gameObj.crops[playerObj.currentCrop].getTimeDeath() * 1000;
 
 			//update player money
-			playerObj.money -= gameObj.crops[playerObj.currentCrop].cost;
+			playerObj.money -= gameObj.crops[playerObj.currentCrop].getCost();
 			gameObj.updateMoney();
 		}
 		else if(land.state == land.READY ) {
@@ -48,10 +48,10 @@ robotfarm.Garage = function(gameObj, playerObj) {
 			land.state = land.EMPTY;
 
 			//update player money
-			playerObj.money += gameObj.crops[land.crop].revenue;
-			playerObj.robotArmor += gameObj.crops[land.crop].armor;
-			playerObj.robotAttack1 += gameObj.crops[land.crop].attack1;
-			playerObj.robotAttack2 += gameObj.crops[land.crop].attack2;
+			playerObj.money += gameObj.crops[land.crop].getRevenue();
+			playerObj.robotArmor += gameObj.crops[land.crop].getArmor();
+			playerObj.robotAttack1 += gameObj.crops[land.crop].getAttack1();
+			playerObj.robotAttack2 += gameObj.crops[land.crop].getAttack2();
 			gameObj.updateMoney();
 		}
 	});
@@ -62,7 +62,7 @@ robotfarm.Garage = function(gameObj, playerObj) {
 		if(this.state == this.GROWING) {
 			if(this.ripeTime <= 0) {
 				this.state = this.READY;
-				this.setFill('images/'+gameObj.crops[this.crop].image);
+				this.setFill('images/'+gameObj.crops[this.crop].getImage());
 			}
 			else {
 				this.ripeTime -= dt;
