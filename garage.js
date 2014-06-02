@@ -81,9 +81,3 @@ robotfarm.Garage = function(gameObj, playerObj) {
 }
 
 goog.inherits(robotfarm.Garage, lime.Sprite);
-
-//states
-robotfarm.Garage.prototype.EMPTY = 0;
-robotfarm.Garage.prototype.PLOWED = 1;
-robotfarm.Garage.prototype.GROWING = 2;
-robotfarm.Garage.prototype.READY = 3;

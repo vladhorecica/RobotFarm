@@ -2,6 +2,24 @@ var EASY = 0;
 var MEDIUM = 10;
 var HARD = 20;
 
+var BUTTON_COLOR = '#EA6100';
+var CONTROL_COLOR = '#0D0D0D';
+var TEXT_COLOR = 'white';
+
+var NAME_INDEX = 0;
+var COST_INDEX = 1;
+var REVENUE_INDEX = 2;
+var TIME_RIPE_INDEX = 3;
+var TIME_DEATH_INDEX = 4;
+var ATTACK1_INDEX = 5;
+var ATTACK2_INDEX = 6;
+var ARMOR_INDEX = 7;
+//states
+robotfarm.Garage.prototype.EMPTY = 0;
+robotfarm.Garage.prototype.PLOWED = 1;
+robotfarm.Garage.prototype.GROWING = 2;
+robotfarm.Garage.prototype.READY = 3;
+
 //player object
 var playerObj = {
 	money: 300,
@@ -28,9 +46,10 @@ var gameObj = {
 	shop_margin_y: 20
 }
 
-function setDifficulty(level) {
-	gameObj.crops = [];
-	for(var i=0; i < settings.length; i++) {
-		gameObj.crops.push(new GameItem(settings[i], level));
-	}
-}
+var RIGHT = {0: gameObj.controlsLayer_w-50, 1:gameObj.height-gameObj.controlsLayer_h/2};
+var RIGHT2 = {0: gameObj.width - 40, 1:gameObj.height-25};
+var MIDDLE = {0:gameObj.controlsLayer_w-140, 1:gameObj.height-gameObj.controlsLayer_h/2};
+var MIDDLE2 = {0: gameObj.width/2, 1:gameObj.height-25};
+var LEFT= {0:50, 1:gameObj.height-gameObj.controlsLayer_h/2};
+var LEFT2 = {0:40, 1:gameObj.height-25};
+var NULL = {0:0, 1:0};

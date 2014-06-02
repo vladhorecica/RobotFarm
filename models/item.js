@@ -1,13 +1,13 @@
 function GameItem(data, level) {
-	var name = data[0];
-	var cost = data[1] + level;
-	var revenue = data[2] + level;
-	var time_to_ripe = data[3] + level;
-	var time_to_death = data[4] - level;
-	var image = data[0] + '.png';
-	var attack1 = data[5];
-	var attack2 = data[6];
-	var armor = data[7];
+	var name = data[NAME_INDEX];
+	var cost = data[COST_INDEX] + level;
+	var revenue = data[REVENUE_INDEX] + level;
+	var time_to_ripe = data[TIME_RIPE_INDEX] + level;
+	var time_to_death = data[TIME_DEATH_INDEX] - level;
+	var image = data[NAME_INDEX] + '.png';
+	var attack1 = data[ATTACK1_INDEX];
+	var attack2 = data[ATTACK2_INDEX];
+	var armor = data[ARMOR_INDEX];
 
 	this.setName = function(value) {
 		name = value;

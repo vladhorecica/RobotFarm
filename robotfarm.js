@@ -12,79 +12,46 @@ goog.require('robotfarm.Garage');
 
 // entrypoint
 robotfarm.start = function(){
-	setDifficulty(EASY);
-	var director = new lime.Director(document.body,gameObj.width,gameObj.height);
+	Game.setDifficulty(EASY);
+	var director = Game.getElement('director');
 	director.makeMobileWebAppCapable();
-	director.setDisplayFPS(true);
+	director.setDisplayFPS(false);
 
 	// First layer ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	var difScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
-	var difLayer = new lime.Layer().setAnchorPoint(0, 0);
-
-	//controls area
-	var difArea = new lime.Sprite().setAnchorPoint(0,0).setPosition(0,0)
-		.setSize(gameObj.width, gameObj.height).setFill('#0D0D0D');
+	var difScene = Game.getElement('scene');
+	var difLayer = Game.getElement('layer');
+	var difArea = Game.getElement('area', NULL, {0:gameObj.width, 1:gameObj.height});
 	difLayer.appendChild(difArea);
 	difScene.appendChild(difLayer);
 
 	director.replaceScene(difScene);
 
-	//difficulty label
-	var difLabel = new lime.Label().setText('PICK DIFFICULTY').setFontColor('white')
-		.setFontSize(20)
-		.setPosition(gameObj.width/2, gameObj.height - gameObj.landLayer_h);
+	// DIFFICULTY MENU
+	var difLabel = Game.getElement('label', 'PICK DIFFICULTY', {0:gameObj.width/2, 1:gameObj.height - gameObj.landLayer_h}, 20);
+	var easyButton = Game.getElement('difButton', 'EASY', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2});
+	var mediumButton = Game.getElement('difButton', 'MEDIUM', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2 + 70});
+	var hardButton = Game.getElement('difButton', 'HARD', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2 + 140});
 	difLayer.appendChild(difLabel);
-
-	//easy button
-	var easyButton = new lime.GlossyButton().setColor('#EA6100').setText('EASY')
-		.setPosition(gameObj.landLayer_w/2, gameObj.landLayer_h/2 )
-		.setSize(130, 40);
 	difLayer.appendChild(easyButton);
-
-	//medium button
-	var mediumButton = new lime.GlossyButton().setColor('#EA6100').setText('MEDIUM')
-		.setPosition(gameObj.landLayer_w/2, gameObj.landLayer_h/2 + 70)
-		.setSize(130, 40);
 	difLayer.appendChild(mediumButton);
-
-	//hard button
-	var hardButton = new lime.GlossyButton().setColor('#EA6100').setText('HARD')
-		.setPosition(gameObj.landLayer_w/2, gameObj.landLayer_h/2 + 140)
-		.setSize(130, 40);
 	difLayer.appendChild(hardButton);
-
 	// END FIRST LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	// MAIN LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	var gameScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
-	var landLayer = new lime.Layer().setAnchorPoint(0, 0);
-	var controlsLayer = new lime.Layer().setAnchorPoint(0, 0);
-
+	var gameScene = Game.getElement('scene');
+	var landLayer = Game.getElement('layer');
+	var controlsLayer = Game.getElement('layer');
 	gameScene.appendChild(landLayer);
 	gameScene.appendChild(controlsLayer);
 
 	//controls area
-	var controlArea = new lime.Sprite().setAnchorPoint(0,0)
-		.setPosition(0, gameObj.height-gameObj.controlsLayer_h)
-		.setSize(gameObj.controlsLayer_w, gameObj.controlsLayer_h)
-		.setFill('#0D0D0D')
+	var controlArea = Game.getElement('area', {0:0, 1:gameObj.height-gameObj.controlsLayer_h}, {0:gameObj.controlsLayer_w, 1:gameObj.controlsLayer_h});
+	var shopButton = Game.getElement('button', 'Shop', RIGHT);
+	var inventoryButton = Game.getElement('button', 'Inventory', MIDDLE);
+	var moneyLabel = Game.getElement('label', 'Cash $'+playerObj.money, LEFT, 18);
 	controlsLayer.appendChild(controlArea);
-
-	//shop button
-	var shopButton = new lime.GlossyButton().setColor('#EA6100').setText('Shop')
-		.setPosition(gameObj.controlsLayer_w-50, gameObj.height-gameObj.controlsLayer_h/2)
-		.setSize(80, 40);
 	controlsLayer.appendChild(shopButton);
-
-	//inventory button
-	var inventoryButton = new lime.GlossyButton().setColor('#EA6100').setText('Inventory')
-		.setPosition(gameObj.controlsLayer_w-140, gameObj.height-gameObj.controlsLayer_h/2)
-		.setSize(80, 40);
 	controlsLayer.appendChild(inventoryButton);
-
-	//money
-	var moneyLabel = new lime.Label().setText('Cash $'+playerObj.money).setFontColor('white')
-		.setPosition(60, gameObj.height-gameObj.controlsLayer_h/2);
 	controlsLayer.appendChild(moneyLabel);
 
 	//updating player stats
@@ -95,81 +62,51 @@ robotfarm.start = function(){
 	};
 
 	//create land elements
-	for(var i=0; i<gameObj.num_tiles_x; i++) {
-		for(var j=0; j<gameObj.num_tiles_y; j++) {
-			var landElement = new robotfarm.Garage(gameObj, playerObj)
-				.setPosition(i*gameObj.tile_size, j*gameObj.tile_size);
-			landLayer.appendChild(landElement);
-		}
-	}
-
-//	director.replaceScene(gameScene);
+	Game.createLand(landLayer);
 	// END MAIN LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	// INVENTORY LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// inventory
-	var invScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
-	var invLayer = new lime.Layer().setAnchorPoint(0, 0);
-
-	var invBackground = new lime.Sprite().setAnchorPoint(0,0).setPosition(0,0)
-		.setSize(gameObj.width, gameObj.height).setFill('#0D0D0D');
+	var invScene = Game.getElement('scene');
+	var invLayer = Game.getElement('layer');
+	var invBackground = Game.getElement('area', NULL, {0:gameObj.width, 1:gameObj.height});
 	invLayer.appendChild(invBackground);
 	invScene.appendChild(invLayer);
 
-	var item = new lime.Sprite().setAnchorPoint(0,0).setPosition(0, 0)
-		.setSize(gameObj.landLayer_w, gameObj.landLayer_h)
-		.setFill('images/robot_inventory.png');
+	var item = Game.getElement('invImage', 'robot_inventory');
+	var invCloseButton = Game.getElement('button', 'Back', RIGHT);
 	invLayer.appendChild(item);
-
-	//close button
-	var invCloseButton = new lime.GlossyButton().setColor('#133242').setText('Back')
-		.setPosition(gameObj.controlsLayer_w-50, gameObj.height-gameObj.controlsLayer_h/2)
-		.setSize(80, 40);
 	invLayer.appendChild(invCloseButton);
 
 	// robot stats
-	var attackLabel = new lime.Label().setText('ATTACK: '+ playerObj.robotAttack1 + '-' + playerObj.robotAttack2)
-		.setFontColor('white')
-		.setPosition(60, gameObj.height-gameObj.controlsLayer_h/2);
+	var attackLabel = Game.getElement('label', 'ATTACK: '+ playerObj.robotAttack1 + '-' + playerObj.robotAttack2, {0:60, 1:gameObj.height-gameObj.controlsLayer_h/2}, 14);
+	var armorLabel = Game.getElement('label', 'ARMOR: '+ playerObj.robotArmor, {0:60, 1:gameObj.height-gameObj.controlsLayer_h/2 + 15}, 14);
 	invLayer.appendChild(attackLabel);
-	var armorLabel = new lime.Label().setText('ARMOR: '+ playerObj.robotArmor)
-		.setFontColor('white')
-		.setPosition(60, gameObj.height-gameObj.controlsLayer_h/2 + 15);
 	invLayer.appendChild(armorLabel);
 	// END INVENTORY LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	// SHOP LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	//shop
-	var shopScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
-	var shopLayer = new lime.Layer().setAnchorPoint(0, 0);
-
-	var shopBackground = new lime.Sprite().setAnchorPoint(0,0).setPosition(0,0)
-		.setSize(gameObj.width, gameObj.height).setFill('#0D0D0D');
+	var shopScene = Game.getElement('scene');
+	var shopLayer = Game.getElement('layer');
+	var shopBackground = Game.getElement('area', NULL, {0:gameObj.width, 1:gameObj.height});
+	var closeButton = Game.getElement('button', 'Back', MIDDLE2);
+	var nextButton = Game.getElement('button', '>', RIGHT2);
+	nextButton.setSize(20,20);
 	shopLayer.appendChild(shopBackground);
 	shopScene.appendChild(shopLayer);
+	shopLayer.appendChild(closeButton);
 
 	//next shop page
-	var nextShopScene = new lime.Scene().setRenderer(lime.Renderer.CANVAS);
-	var nextShopLayer = new lime.Layer().setAnchorPoint(0, 0);
-
-	var nextShopBackground = new lime.Sprite().setAnchorPoint(0,0).setPosition(0,0)
-		.setSize(gameObj.width, gameObj.height).setFill('#0D0D0D');
+	var nextShopScene = Game.getElement('scene');
+	var nextShopLayer = Game.getElement('layer');
+	var nextShopBackground = Game.getElement('area', NULL, {0:gameObj.width, 1:gameObj.height});
+	var closeButton1 = Game.getElement('button', 'Back', MIDDLE2);
+	var prevButton = Game.getElement('button', '<', LEFT2);
+	prevButton.setSize(20, 20);
 	nextShopLayer.appendChild(nextShopBackground);
 	nextShopScene.appendChild(nextShopLayer);
-
-	//close button
-	var closeButton = new lime.GlossyButton().setColor('#133242').setText('Back')
-		.setPosition(gameObj.width/2, gameObj.height-25)
-		.setSize(80, 40);
-	shopLayer.appendChild(closeButton);
-	nextShopLayer.appendChild(closeButton);
-
-	//next button
-	var nextButton = new lime.GlossyButton().setColor('#133242').setText('>')
-		.setPosition(gameObj.width - 40, gameObj.height-25)
-		.setSize(20, 20);
-	shopLayer.appendChild(nextButton);
-
+	nextShopLayer.appendChild(closeButton1);
+	nextShopLayer.appendChild(prevButton);
 	// END SHOP LAYER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	// EVENTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -182,9 +119,15 @@ robotfarm.start = function(){
 	goog.events.listen(nextButton,['mousedown', 'touchstart'], function(e) {
 		director.replaceScene(nextShopScene);
 	});
+	goog.events.listen(prevButton,['mousedown', 'touchstart'], function(e) {
+		director.replaceScene(shopScene);
+	});
 
 	//close shop event
 	goog.events.listen(closeButton,['mousedown', 'touchstart'], function(e) {
+		director.replaceScene(gameScene);
+	});
+	goog.events.listen(closeButton1,['mousedown', 'touchstart'], function(e) {
 		director.replaceScene(gameScene);
 	});
 
@@ -200,52 +143,23 @@ robotfarm.start = function(){
 
 	//easy event
 	goog.events.listen(easyButton,['mousedown', 'touchstart'], function(e) {
-		setDifficulty(EASY);
-		setShopItems(shopLayer, gameScene, director);
+		Game.setDifficulty(EASY);
+		Game.setShopItems(shopLayer, gameScene, director, nextShopLayer, nextButton);
 		director.replaceScene(gameScene);
 	});
 
 	//medium event
 	goog.events.listen(mediumButton,['mousedown', 'touchstart'], function(e) {
-		setDifficulty(MEDIUM);
-		setShopItems(shopLayer, gameScene, director);
+		Game.setDifficulty(MEDIUM);
+		Game.setShopItems(shopLayer, gameScene, director, nextShopLayer, nextButton);
 		director.replaceScene(gameScene);
 	});
 
 	//hard event
 	goog.events.listen(hardButton,['mousedown', 'touchstart'], function(e) {
-		setDifficulty(HARD);
-		setShopItems(shopLayer, gameScene, director);
+		Game.setDifficulty(HARD);
+		Game.setShopItems(shopLayer, gameScene, director, nextShopLayer, nextButton);
 		director.replaceScene(gameScene);
 	});
 	// END EVENTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 }
-
-function setShopItems(shopLayer, gameScene, director) {
-	//shop items
-	for(var i=0; i<gameObj.crops.length; i++) {
-		var item = new lime.Sprite().setAnchorPoint(0,0).setPosition(gameObj.shop_margin_x, gameObj.shop_margin_y + (gameObj.shop_margin_y + gameObj.tile_size)*i)
-			.setFill('images/'+gameObj.crops[i].getImage()).setSize(gameObj.tile_size, gameObj.tile_size);
-		shopLayer.appendChild(item);
-
-		var label = new lime.Label().setText(gameObj.crops[i].getName()+' ('+gameObj.crops[i].getTimeRipe()+' days)').setFontColor('#E8FC08')
-			.setPosition(gameObj.shop_margin_x+150, gameObj.shop_margin_y*1.5 + (gameObj.shop_margin_y + gameObj.tile_size)*i);
-		shopLayer.appendChild(label);
-		var label = new lime.Label().setText('cost: $'+gameObj.crops[i].getCost()).setFontColor('#E8FC08')
-			.setPosition(gameObj.shop_margin_x+150, gameObj.shop_margin_y*2.5 + (gameObj.shop_margin_y + gameObj.tile_size)*i);
-		shopLayer.appendChild(label);
-		var label = new lime.Label().setText('revenue: $'+gameObj.crops[i].getRevenue()).setFontColor('#E8FC08')
-			.setPosition(gameObj.shop_margin_x+150, gameObj.shop_margin_y*3.4 + (gameObj.shop_margin_y + gameObj.tile_size)*i);
-		shopLayer.appendChild(label);
-
-		//pick crop
-		(function(item, i) {
-			goog.events.listen(item,['mousedown', 'touchstart'], function(e) {
-				playerObj.currentCrop = i;
-				director.replaceScene(gameScene);
-			});
-		})(item, i);
-	}
-}
-//this is required for outside access after code is compiled in ADVANCED_COMPILATIONS mode
-//goog.exportSymbol('robotfarm.start', robotfarm.start);
