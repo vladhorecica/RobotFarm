@@ -38,7 +38,7 @@ var Game = {
 					.setAnchorPoint(0,0)
 					.setPosition(arguments[1][0], arguments[1][1])
 					.setSize(arguments[2][0], arguments[2][1])
-					.setFill(CONTROL_COLOR);
+					.setFill('images/backg.png');
 			case 'land':
 				return new robotfarm.Garage(gameObj, playerObj)
 					.setPosition(arguments[1][0], arguments[1][1]);

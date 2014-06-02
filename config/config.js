@@ -2,7 +2,7 @@ var EASY = 0;
 var MEDIUM = 10;
 var HARD = 20;
 
-var BUTTON_COLOR = '#EA6100';
+var BUTTON_COLOR = '#126AFE';
 var CONTROL_COLOR = '#0D0D0D';
 var TEXT_COLOR = 'white';
 

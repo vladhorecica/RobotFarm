@@ -46,6 +46,7 @@ robotfarm.start = function(){
 
 	//controls area
 	var controlArea = Game.getElement('area', {0:0, 1:gameObj.height-gameObj.controlsLayer_h}, {0:gameObj.controlsLayer_w, 1:gameObj.controlsLayer_h});
+	controlArea.setFill('images/control.png');
 	var shopButton = Game.getElement('button', 'Shop', RIGHT);
 	var inventoryButton = Game.getElement('button', 'Inventory', MIDDLE);
 	var moneyLabel = Game.getElement('label', 'Cash $'+playerObj.money, LEFT, 18);
