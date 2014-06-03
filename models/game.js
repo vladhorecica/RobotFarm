@@ -1,3 +1,15 @@
+/**
+ * Variable used for game configuration.
+ *
+ * @type {
+ * 	{
+ * 	getElement: Function,      Factory pattern in order to return game objects
+ * 	setDifficulty: Function,   Sets the difficulty of the game
+ * 	createLand: Function,      Creates garage objects in order to form the construction land
+ * 	setShopItems: Function     Creates items list for shop layer
+ * 	}
+ * }
+ */
 var Game = {
 	getElement: function() {
 		switch(arguments[0]) {

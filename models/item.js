@@ -1,3 +1,10 @@
+/**
+ * Abstract class for a game item.
+ *
+ * @param data      Contains item data.
+ * @param level     Difficuly of the game.
+ * @constructor
+ */
 function GameItem(data, level) {
 	var name = data[NAME_INDEX];
 	var cost = data[COST_INDEX] + level;

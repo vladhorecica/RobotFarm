@@ -1,7 +1,6 @@
 //set main namespace
 goog.provide('robotfarm');
 
-
 //get requirements
 goog.require('lime.Director');
 goog.require('lime.Scene');
@@ -10,7 +9,7 @@ goog.require('lime.GlossyButton');
 goog.require('robotfarm.Garage');
 
 
-// entrypoint
+// ENTRYPOINT - the MAIN of our application
 robotfarm.start = function(){
 	Game.setDifficulty(EASY);
 	var director = Game.getElement('director');
