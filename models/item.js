@@ -9,8 +9,8 @@ function GameItem(data, level) {
 	var name = data[NAME_INDEX];
 	var cost = data[COST_INDEX] + level;
 	var revenue = data[REVENUE_INDEX] + level;
-	var time_to_ripe = data[TIME_RIPE_INDEX] + level;
-	var time_to_death = data[TIME_DEATH_INDEX] - level;
+	var time_ready = data[TIME_READY_INDEX] + level;
+	var time_destroy = data[TIME_DEATH_INDEX] - level;
 	var image = data[NAME_INDEX] + '.png';
 	var attack1 = data[ATTACK1_INDEX];
 	var attack2 = data[ATTACK2_INDEX];
@@ -26,10 +26,10 @@ function GameItem(data, level) {
 		revenue = value;
 	}
 	this.setTimeRipe = function(value) {
-		time_to_ripe = value;
+		time_ready = value;
 	}
 	this.setTimeDeath = function(value) {
-		time_to_death = value;
+		time_destroy = value;
 	}
 	this.setImage = function(value) {
 		image = value;
@@ -52,11 +52,11 @@ function GameItem(data, level) {
 	this.getRevenue = function() {
 		return revenue;
 	}
-	this.getTimeRipe = function() {
-		return time_to_ripe;
+	this.getTimeReady = function() {
+		return time_ready;
 	}
 	this.getTimeDeath = function() {
-		return time_to_death;
+		return time_destroy;
 	}
 	this.getImage = function() {
 		return image;

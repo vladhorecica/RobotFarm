@@ -58,15 +58,15 @@ var Game = {
 		return false;
 	},
 	setDifficulty: function(level) {
-		gameObj.crops = [];
+		gameObj.pieces = [];
 		for(var i=0; i < settings.length; i++) {
-			gameObj.crops.push(new GameItem(settings[i], level));
+			gameObj.pieces.push(new GameItem(settings[i], level));
 		}
 	},
 	createLand: function(layer) {
-		for(var i=0; i<gameObj.num_tiles_x; i++) {
-			for(var j=0; j<gameObj.num_tiles_y; j++) {
-				var landElement = Game.getElement('land', {0:i*gameObj.tile_size, 1:j*gameObj.tile_size});
+		for(var i=0; i<gameObj.number_land_x; i++) {
+			for(var j=0; j<gameObj.number_land_y; j++) {
+				var landElement = Game.getElement('land', {0:i*gameObj.item_size, 1:j*gameObj.item_size});
 				layer.appendChild(landElement);
 			}
 		}
@@ -76,25 +76,25 @@ var Game = {
 		var count = 5;
 		var more = true;
 
-		if (gameObj.crops.length <= count) {
-			count = gameObj.crops.length;
+		if (gameObj.pieces.length <= count) {
+			count = gameObj.pieces.length;
 			more = false;
 		}
 		for(var i=0; i<count; i++) {
-			var item = this.getElement('area', {0:gameObj.shop_margin_x, 1:gameObj.shop_margin_y + (gameObj.shop_margin_y + gameObj.tile_size)*i}, {0:gameObj.tile_size, 1:gameObj.tile_size})
-			item.setFill('images/'+gameObj.crops[i].getImage());
-			var stats1 = this.getElement('label', gameObj.crops[i].getName()+' ('+gameObj.crops[i].getTimeRipe()+' days)', {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*1.5 + (gameObj.shop_margin_y + gameObj.tile_size)*i}, 14);
-			var stats2 = this.getElement('label', 'cost: $'+gameObj.crops[i].getCost(), {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*2.5 + (gameObj.shop_margin_y + gameObj.tile_size)*i}, 14);
-			var stats3 = this.getElement('label', 'revenue: $'+gameObj.crops[i].getRevenue(), {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*3.4 + (gameObj.shop_margin_y + gameObj.tile_size)*i}, 14);
+			var item = this.getElement('area', {0:gameObj.shop_margin_x, 1:gameObj.shop_margin_y + (gameObj.shop_margin_y + gameObj.item_size)*i}, {0:gameObj.item_size, 1:gameObj.item_size})
+			item.setFill('images/'+gameObj.pieces[i].getImage());
+			var stats1 = this.getElement('label', gameObj.pieces[i].getName()+' ('+gameObj.pieces[i].getTimeReady()+' days)', {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*1.5 + (gameObj.shop_margin_y + gameObj.item_size)*i}, 14);
+			var stats2 = this.getElement('label', 'COST: $'+gameObj.pieces[i].getCost(), {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*2.5 + (gameObj.shop_margin_y + gameObj.item_size)*i}, 14);
+			var stats3 = this.getElement('label', 'REVENUE: $'+gameObj.pieces[i].getRevenue(), {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*3.4 + (gameObj.shop_margin_y + gameObj.item_size)*i}, 14);
 			shopLayer.appendChild(item);
 			shopLayer.appendChild(stats1);
 			shopLayer.appendChild(stats2);
 			shopLayer.appendChild(stats3);
 
-			//pick crop
+			//pick piece
 			(function(item, i) {
 				goog.events.listen(item,['mousedown', 'touchstart'], function(e) {
-					playerObj.currentCrop = i;
+					playerObj.currentPiece = i;
 					director.replaceScene(gameScene);
 				});
 			})(item, i);
@@ -103,21 +103,21 @@ var Game = {
 		if (more) {
 			shopLayer.appendChild(nextButton);
 			var k = 0;
-			for(var i=count; i<gameObj.crops.length; i++) {
-				var item = this.getElement('area', {0:gameObj.shop_margin_x, 1:gameObj.shop_margin_y + (gameObj.shop_margin_y + gameObj.tile_size)*k}, {0:gameObj.tile_size, 1:gameObj.tile_size})
-				item.setFill('images/'+gameObj.crops[i].getImage());
-				var stats1 = this.getElement('label', gameObj.crops[i].getName()+' ('+gameObj.crops[i].getTimeRipe()+' days)', {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*1.5 + (gameObj.shop_margin_y + gameObj.tile_size)*k}, 14);
-				var stats2 = this.getElement('label', 'cost: $'+gameObj.crops[i].getCost(), {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*2.5 + (gameObj.shop_margin_y + gameObj.tile_size)*k}, 14);
-				var stats3 = this.getElement('label', 'revenue: $'+gameObj.crops[i].getRevenue(), {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*3.4 + (gameObj.shop_margin_y + gameObj.tile_size)*k}, 14);
+			for(var i=count; i<gameObj.pieces.length; i++) {
+				var item = this.getElement('area', {0:gameObj.shop_margin_x, 1:gameObj.shop_margin_y + (gameObj.shop_margin_y + gameObj.item_size)*k}, {0:gameObj.item_size, 1:gameObj.item_size})
+				item.setFill('images/'+gameObj.pieces[i].getImage());
+				var stats1 = this.getElement('label', gameObj.pieces[i].getName()+' ('+gameObj.pieces[i].getTimeReady()+' days)', {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*1.5 + (gameObj.shop_margin_y + gameObj.item_size)*k}, 14);
+				var stats2 = this.getElement('label', 'COST: $'+gameObj.pieces[i].getCost(), {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*2.5 + (gameObj.shop_margin_y + gameObj.item_size)*k}, 14);
+				var stats3 = this.getElement('label', 'REVENUE: $'+gameObj.pieces[i].getRevenue(), {0:gameObj.shop_margin_x+150, 1:gameObj.shop_margin_y*3.4 + (gameObj.shop_margin_y + gameObj.item_size)*k}, 14);
 				nextShopLayer.appendChild(item);
 				nextShopLayer.appendChild(stats1);
 				nextShopLayer.appendChild(stats2);
 				nextShopLayer.appendChild(stats3);
 				k++;
-				//pick crop
+				//pick piece
 				(function(item, i) {
 					goog.events.listen(item,['mousedown', 'touchstart'], function(e) {
-						playerObj.currentCrop = i;
+						playerObj.currentPiece = i;
 						director.replaceScene(gameScene);
 					});
 				})(item, i);

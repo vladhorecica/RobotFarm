@@ -16,14 +16,53 @@ robotfarm.start = function(){
 	director.makeMobileWebAppCapable();
 	director.setDisplayFPS(false);
 
+	// Start Game layer ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	var startScene = Game.getElement('scene');
+	var startLayer = Game.getElement('layer');
+	var startArea = Game.getElement('area', NULL, {0:gameObj.width, 1:gameObj.height});
+	startLayer.appendChild(startArea);
+	startScene.appendChild(startLayer);
+
+	director.replaceScene(startScene);
+
+	// Menu
+	var titleLabel = Game.getElement('label', 'ROBOT FARM', {0:gameObj.width/2, 1:gameObj.height - gameObj.landLayer_h}, 45);
+	var startButton = Game.getElement('difButton', 'Start', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2});
+	var aboutButton = Game.getElement('difButton', 'About', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2 + 70});
+	var eLabel = Game.getElement('label', 'v1.0', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2 + 220}, 15);
+	startLayer.appendChild(titleLabel);
+	startLayer.appendChild(startButton);
+	startLayer.appendChild(aboutButton);
+	startLayer.appendChild(eLabel);
+	// END Start  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	// About layer ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	var aboutScene = Game.getElement('scene');
+	var aboutLayer = Game.getElement('layer');
+	var aboutBackground = Game.getElement('area', NULL, {0:gameObj.width, 1:gameObj.height});
+	aboutLayer.appendChild(aboutBackground);
+	aboutScene.appendChild(aboutLayer);
+
+	var aLabel = Game.getElement('label', 'Aplicatie Licenta', {0:gameObj.width/2, 1:gameObj.height - gameObj.landLayer_h}, 20);
+	var bLabel = Game.getElement('label', 'Autor: Horecica Vlad', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2}, 20);
+	var cLabel = Game.getElement('label', 'Coordonator: Lazar Ioan', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2 + 30}, 20);
+	var dLabel = Game.getElement('label', 'Anul: 2014', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2 + 60}, 20);
+	var eLabel = Game.getElement('label', 'v1.0', {0:gameObj.landLayer_w/2, 1:gameObj.landLayer_h/2 + 220}, 15);
+	var aboutCloseButton = Game.getElement('button', 'Back', RIGHT);
+	aboutLayer.appendChild(aboutCloseButton);
+	aboutLayer.appendChild(aLabel);
+	aboutLayer.appendChild(bLabel);
+	aboutLayer.appendChild(cLabel);
+	aboutLayer.appendChild(dLabel);
+	aboutLayer.appendChild(eLabel);
+	// END About Layer ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 	// First layer ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var difScene = Game.getElement('scene');
 	var difLayer = Game.getElement('layer');
 	var difArea = Game.getElement('area', NULL, {0:gameObj.width, 1:gameObj.height});
 	difLayer.appendChild(difArea);
 	difScene.appendChild(difLayer);
-
-	director.replaceScene(difScene);
 
 	// DIFFICULTY MENU
 	var difLabel = Game.getElement('label', 'PICK DIFFICULTY', {0:gameObj.width/2, 1:gameObj.height - gameObj.landLayer_h}, 20);
@@ -111,6 +150,18 @@ robotfarm.start = function(){
 
 	// EVENTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	//launch shop event
+	goog.events.listen(aboutCloseButton,['mousedown', 'touchstart'], function(e) {
+		director.replaceScene(startScene);
+	});
+
+	goog.events.listen(startButton,['mousedown', 'touchstart'], function(e) {
+		director.replaceScene(difScene);
+	});
+
+	goog.events.listen(aboutButton,['mousedown', 'touchstart'], function(e) {
+		director.replaceScene(aboutScene);
+	});
+
 	goog.events.listen(shopButton,['mousedown', 'touchstart'], function(e) {
 		director.replaceScene(shopScene);
 	});

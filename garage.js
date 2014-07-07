@@ -11,7 +11,7 @@ robotfarm.Garage = function(gameObj, playerObj) {
 
 	goog.base(this);
 	this.setAnchorPoint(0, 0);
-	this.setSize(gameObj.tile_size,gameObj.tile_size);
+	this.setSize(gameObj.item_size,gameObj.item_size);
 	this.setFill(BASE_IMAGE);
 
 	this.state = this.EMPTY;
@@ -20,26 +20,26 @@ robotfarm.Garage = function(gameObj, playerObj) {
 	goog.events.listen(this,['mousedown', 'touchstart'], function(e) {
 		e.event.stopPropagation();
 		/* Prepare land for construction */
-		if(land.state == land.EMPTY && playerObj.money >= gameObj.costPlowing) {
+		if(land.state == land.EMPTY && playerObj.money >= gameObj.costPreparation) {
 			/* Change the state and the image of the current land object*/
-			land.setFill(PLOWED_IMAGE);
-			land.state = land.PLOWED;
+			land.setFill(PREPARED_IMAGE);
+			land.state = land.PREPARED;
 
 			/* Update player's money */
-			playerObj.money -= gameObj.costPlowing;
+			playerObj.money -= gameObj.costPreparation;
 			gameObj.updateMoney();
 		}
 		/* Start the construction of the wanted object */
-		else if(land.state == land.PLOWED && playerObj.money >= gameObj.crops[playerObj.currentCrop].getCost()) {
-			land.setFill(GROWING_IMAGE);
-			land.state = land.GROWING;
+		else if(land.state == land.PREPARED && playerObj.money >= gameObj.pieces[playerObj.currentPiece].getCost()) {
+			land.setFill(CONSTRUCTING_IMAGE);
+			land.state = land.CONSTRUCTING;
 
 			/* Update object type and time till it's ready and expired */
-			land.crop = playerObj.currentCrop;
-			land.ripeTime = gameObj.crops[playerObj.currentCrop].getTimeRipe() * 1000;
-			land.deathTime = gameObj.crops[playerObj.currentCrop].getTimeDeath() * 1000;
+			land.piece = playerObj.currentPiece;
+			land.ripeTime = gameObj.pieces[playerObj.currentPiece].getTimeReady() * 1000;
+			land.deathTime = gameObj.pieces[playerObj.currentPiece].getTimeDeath() * 1000;
 
-			playerObj.money -= gameObj.crops[playerObj.currentCrop].getCost();
+			playerObj.money -= gameObj.pieces[playerObj.currentPiece].getCost();
 			gameObj.updateMoney();
 		}
 		/* Object is ready to be collected */
@@ -47,21 +47,21 @@ robotfarm.Garage = function(gameObj, playerObj) {
 			land.setFill(BASE_IMAGE);
 			land.state = land.EMPTY;
 
-			playerObj.money += gameObj.crops[land.crop].getRevenue();
-			playerObj.robotArmor += gameObj.crops[land.crop].getArmor();
-			playerObj.robotAttack1 += gameObj.crops[land.crop].getAttack1();
-			playerObj.robotAttack2 += gameObj.crops[land.crop].getAttack2();
+			playerObj.money += gameObj.pieces[land.piece].getRevenue();
+			playerObj.robotArmor += gameObj.pieces[land.piece].getArmor();
+			playerObj.robotAttack1 += gameObj.pieces[land.piece].getAttack1();
+			playerObj.robotAttack2 += gameObj.pieces[land.piece].getAttack2();
 			gameObj.updateMoney();
 		}
 	});
 
-	/* Check the state of the plant */
+	/* Check the state of the item */
 	lime.scheduleManager.scheduleWithDelay(function() {
 		/* Object is constructing */
-		if(this.state == this.GROWING) {
+		if(this.state == this.CONSTRUCTING) {
 			if(this.ripeTime <= 0) {
 				this.state = this.READY;
-				this.setFill('images/'+gameObj.crops[this.crop].getImage());
+				this.setFill('images/'+gameObj.pieces[this.piece].getImage());
 			}
 			else {
 				this.ripeTime -= gameObj.down_time;
